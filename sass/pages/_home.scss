@@ -1,0 +1,40 @@
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background: #111;
+  color: #fff;
+  margin: 0;
+  padding: 20px;
+}
+h1 {
+  text-align: center;
+}
+.teams {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+}
+.card {
+  background: #222;
+  padding: 15px;
+  border-radius: 10px;
+  text-align: center;
+  width: 220px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+.card:hover {
+  transform: scale(1.05);
+  background: #333;
+}
+.card img {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+}
+@media (max-width: 600px) {
+  .teams {
+    flex-direction: column;
+    align-items: center;
+  }
+}
