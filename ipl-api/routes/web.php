@@ -13,6 +13,11 @@
 |
 */
 
+$router->group(['prefix' => 'api'], function () use ($router) {
+    $router->get('/teams', 'IPLController@getTeams');
+    $router->get('/owner/{id}', 'IPLController@getOwner');
+});
+
 $router->get('/', function () use ($router) {
     return $router->app->version();
 });
