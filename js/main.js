@@ -1,74 +1,77 @@
-new Vue({
-  el: '#app',
-  data: {
-    teams: [],
-    owner: null,
-    loadingList: true,
-    loadingOwner: false,
-    errorList: null,
-    errorOwner: null,
+const app = Vue.createApp({
+  data() {
+    return {
+      teamsData: [],
+      teams: [],
+      teamDetails: null,
+      owner: null,
+
+      loadingList: true,
+      loadingTeams: false,
+      loadingOwner: false,
+
+      errorList: "",
+      errorOwner: ""
+    };
   },
+
   created() {
     this.fetchTeams();
   },
+
   methods: {
     fetchTeams() {
-      axios.get('http://localhost:8000/api/teams')
-        .then(response => {
-          this.teams = response.data;
+      this.loadingList = true;
+      this.errorList = "";
+
+      fetch("http://localhost:8000/api/teams")
+        .then((res) => res.json())
+        .then((data) => {
+          this.teamsData = data.sort((a, b) => a.team_name.localeCompare(b.team_name));
+          this.teams = this.teamsData;
         })
-        .catch(error => {
-          this.errorList = "Failed to load teams.";
+        .catch(() => {
+          this.errorList = "⚠️ Failed to load team list.";
         })
         .finally(() => {
           this.loadingList = false;
         });
     },
-    fetchOwner(ownerId) {
+
+    getTeamDetails(id) {
+      this.loadingTeams = true;
       this.loadingOwner = true;
-      this.errorOwner = null;
+      this.errorOwner = "";
+      this.teamDetails = null;
       this.owner = null;
 
-      axios.get(`http://localhost:8000/api/owner/${ownerId}`)
-        .then(response => {
-          this.owner = response.data;
-      // Fetch team details based on the team ID
-      fetch(`http://localhost/lumen-backend/public/teams/${id}`)
-        .then(res => res.json())
-        .then(data => {
-          if (data.length > 0) {
-            const team = data[0];
-            this.founded = team.founded_year || "Not available";
-            this.image = team.team_image || "placeholder.jpg";
+      const selectedTeam = this.teams.find((team) => team.id === id);
 
-            // Fetch the owner details
-            fetch(`http://localhost/lumen-backend/public/owners/${team.owner_id}`)
-              .then(res => res.json())
-              .then(ownerData => {
-                if (ownerData.length > 0) {
-                  const owner = ownerData[0];
-                  this.owner = owner.owner_name || "Not available";
-                  this.ownerBio = owner.bio || "Not available";
-                } else {
-                  this.error = "Owner details not found.";
-                }
-              })
-              .catch(error => {
-                this.error = "Failed to load owner details.";
-              });
-          } else {
-            this.error = "No details found.";
-          }
-          this.loadingDetails = false;
-          document.querySelector("#teamInfoCon").scrollIntoView({ behavior: "smooth", block: "end" });
-        })
-        .catch(error => {
-          this.errorOwner = "Failed to load owner information.";
-        })
-        .finally(() => {
-          this.loadingOwner = false;
-        });
-      }); // Closing parenthesis for then block
-    }, // Closing brace for fetchOwner
+      if (selectedTeam) {
+        this.teamDetails = selectedTeam;
+
+        fetch(`http://localhost:8000/api/owner/${selectedTeam.owner_id}`)
+          .then((res) => res.json())
+          .then((data) => {
+            this.owner = data;
+            setTimeout(() => {
+              const infoBox = document.querySelector("#info-box");
+              if (infoBox) {
+                infoBox.scrollIntoView({ behavior: "smooth" });
+              }
+            }, 300);
+          })
+          .catch(() => {
+            this.errorOwner = "⚠️ Failed to load owner details.";
+          })
+          .finally(() => {
+            this.loadingOwner = false;
+          });
+      } else {
+        this.errorOwner = "⚠️ Team not found.";
+      }
+
+      this.loadingTeams = false;
+    }
   }
-});
+}).mount("#app");
