@@ -1,17 +1,12 @@
 const app = Vue.createApp({
   data() {
     return {
-      teamsData: [],
       teams: [],
-      teamDetails: null,
       owner: null,
-
       loadingList: true,
-      loadingTeams: false,
       loadingOwner: false,
-
-      errorList: "",
-      errorOwner: ""
+      errorList: '',
+      errorOwner: '',
     };
   },
 
@@ -22,56 +17,37 @@ const app = Vue.createApp({
   methods: {
     fetchTeams() {
       this.loadingList = true;
-      this.errorList = "";
-
       fetch("http://localhost:8000/api/teams")
-        .then((res) => res.json())
-        .then((data) => {
-          this.teamsData = data.sort((a, b) => a.team_name.localeCompare(b.team_name));
-          this.teams = this.teamsData;
+        .then(res => res.json())
+        .then(data => {
+          this.teams = data;
         })
         .catch(() => {
-          this.errorList = "⚠️ Failed to load team list.";
+          this.errorList = "⚠️ Failed to fetch teams.";
         })
         .finally(() => {
           this.loadingList = false;
         });
     },
 
-    getTeamDetails(id) {
-      this.loadingTeams = true;
+    getTeamDetails(ownerId) {
       this.loadingOwner = true;
-      this.errorOwner = "";
-      this.teamDetails = null;
       this.owner = null;
+      this.errorOwner = "";
 
-      const selectedTeam = this.teams.find((team) => team.id === id);
-
-      if (selectedTeam) {
-        this.teamDetails = selectedTeam;
-
-        fetch(`http://localhost:8000/api/owner/${selectedTeam.owner_id}`)
-          .then((res) => res.json())
-          .then((data) => {
-            this.owner = data;
-            setTimeout(() => {
-              const infoBox = document.querySelector("#info-box");
-              if (infoBox) {
-                infoBox.scrollIntoView({ behavior: "smooth" });
-              }
-            }, 300);
-          })
-          .catch(() => {
-            this.errorOwner = "⚠️ Failed to load owner details.";
-          })
-          .finally(() => {
-            this.loadingOwner = false;
-          });
-      } else {
-        this.errorOwner = "⚠️ Team not found.";
-      }
-
-      this.loadingTeams = false;
+      fetch(`http://localhost:8000/api/owner/${ownerId}`)
+        .then(res => res.json())
+        .then(data => {
+          this.owner = data;
+        })
+        .catch(() => {
+          this.errorOwner = "⚠️ Failed to fetch owner info.";
+        })
+        .finally(() => {
+          this.loadingOwner = false;
+        });
     }
   }
-}).mount("#app");
+});
+
+app.mount("#app");
