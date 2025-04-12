@@ -15,10 +15,6 @@ use Illuminate\Support\Facades\DB;
 |
 */
 
-$router->get('/test-db', function () {
-    return DB::table('teams')->get();
-});
-
 $router->group(['prefix' => 'api'], function () use ($router) {
     $router->get('/teams', 'IPLController@getTeams');
     $router->get('/owner/{id}', 'IPLController@getOwner');
