@@ -18,12 +18,6 @@ date_default_timezone_set(env('APP_TIMEZONE', 'UTC'));
 | application as an "IoC" container and router for this framework.
 |
 */
-// Allow CORS for all origins
-header("Access-Control-Allow-Origin: http://localhost");
-header("Access-Control-Allow-Headers: Origin, Content-Type, Accept, Authorization");
-header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
-
-
 $app = new Laravel\Lumen\Application(
     dirname(__DIR__)
 );
@@ -85,7 +79,7 @@ $app->configure('app');
 //     'auth' => App\Http\Middleware\Authenticate::class,
 // ]);
 
-$app->routeMiddleware([
+$app->Middleware([
     App\Http\Middleware\CorsMiddleware::class,
 ]);
 
