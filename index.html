@@ -14,24 +14,32 @@
 <body>
   <div id="app">
     <h1>🏏 IPL Teams</h1>
-    
-    <div v-if="loadingList">Loading teams...</div>
+  
+    <div v-if="loadingList">Loading...</div>
     <div v-if="errorList">{{ errorList }}</div>
-
-    <div class="team-list">
-      <div class="card" v-for="team in teams" :key="team.id" @click="getTeamDetails(team.id)">
-        <img :src="`images/${team.team_image}`" alt="Team Logo">
-        <h2>{{ team.team_name }}</h2>
-      </div>
+  
+    <ul>
+      <li v-for="team in teams" :key="team.id">
+        <a href="#" @click.prevent="getTeamDetails(team)">
+          {{ team.team_name }}
+        </a>
+      </li>
+    </ul>
+  
+    <div v-if="teamDetails">
+      <h2>{{ teamDetails.team_name }}</h2>
+      <p>{{ teamDetails.home_city }}</p>
+      <p>Founded: {{ teamDetails.founded_year }}</p>
+      <img :src="'images/' + teamDetails.team_image" alt="Team Logo" />
     </div>
-
-    <div v-if="loadingOwner">Loading owner info...</div>
+  
+    <div v-if="loadingOwner">Loading Owner Info...</div>
     <div v-if="errorOwner">{{ errorOwner }}</div>
-
-    <div v-if="owner" class="owner-details">
-      <h2>{{ owner.owner_name }}</h2>
+  
+    <div v-if="owner">
+      <h3>Owner: {{ owner.owner_name }}</h3>
       <p>{{ owner.bio }}</p>
     </div>
-  </div>
+  </div>  
 </body>
 </html>
