@@ -1,5 +1,7 @@
 <?php
 
+use Illuminate\Support\Facades\DB;
+
 /** @var \Laravel\Lumen\Routing\Router $router */
 
 /*
@@ -12,6 +14,10 @@
 | and give it the Closure to call when that URI is requested.
 |
 */
+
+$router->get('/test-db', function () {
+    return DB::table('teams')->get();
+});
 
 $router->group(['prefix' => 'api'], function () use ($router) {
     $router->get('/api/teams', 'IPLController@getTeams');
