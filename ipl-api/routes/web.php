@@ -15,10 +15,9 @@ use Illuminate\Support\Facades\DB;
 |
 */
 
-$router->group(['prefix' => 'api'], function () use ($router) {
-    $router->get('/teams', 'IPLController@getTeams');
-    $router->get('/owner/{id}', 'IPLController@getOwner');
-});
+$router->get('/api/teams', 'TeamController@index');
+$router->get('/api/owner/{id}', 'OwnerController@show');
+
 
 $router->get('/', function () use ($router) {
     return $router->app->version();

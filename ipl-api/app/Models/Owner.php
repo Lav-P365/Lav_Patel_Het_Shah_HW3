@@ -7,5 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Owner extends Model
 {
     protected $table = 'owners';
-    public $timestamps = false;
+    public $timestamps = false;
+
+    protected $fillable = ['owner_name', 'bio'];
 }
