@@ -4,42 +4,47 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="initial-scale=1.0, width=device-width" />
   <title>IPL Teams</title>
-  <link href="https://fonts.googleapis.com/css?family=Lato%7CRaleway" rel="stylesheet" />
-  <link href="css/grid.css" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollToPlugin.min.js" defer></script>  <link href="css/grid.css" rel="stylesheet" />
   <link href="css/main.css" rel="stylesheet" />
   <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
   <script type="module" src="js/main.js"></script>
 </head>
 
 <body>
-  <div id="app">
-    <h1>🏏 IPL Teams</h1>
+  <div id="app" class="stadium-bg">
+    <div class="ipl-heading">
+      <h1>IPL Teams &amp; Owner information</h1>
+      <p>Click on the team card to see more about teams and their owner information</p>
+    </div>
+    <div v-if="loadingList" class="loading">Loading...</div>
+    <div v-if="errorList" class="error">{{ errorList }}</div>
   
-    <div v-if="loadingList">Loading...</div>
-    <div v-if="errorList">{{ errorList }}</div>
+    <div class="teams-grid">
+      <div v-for="team in teams" :key="team.id" class="team-card" @click="getTeamDetails(team)">
+        <img :src="'images/' + team.team_image" :alt="team.team_name" class="team-logo" />
+        <p class="team-name">{{ team.team_name }}</p>
+      </div>
+    </div>
   
-    <ul>
-      <li v-for="team in teams" :key="team.id">
-        <a href="#" @click.prevent="getTeamDetails(team)">
-          {{ team.team_name }}
-        </a>
-      </li>
-    </ul>
-  
-    <div v-if="teamDetails">
+    <div class="info-wrapper">
+    <div v-if="teamDetails" class="details-box" id="details">
       <h2>{{ teamDetails.team_name }}</h2>
       <p>{{ teamDetails.home_city }}</p>
       <p>Founded: {{ teamDetails.founded_year }}</p>
       <img :src="'images/' + teamDetails.team_image" alt="Team Logo" />
     </div>
   
-    <div v-if="loadingOwner">Loading Owner Info...</div>
-    <div v-if="errorOwner">{{ errorOwner }}</div>
+    <div v-if="loadingOwner" class="loading">Loading Owner Info...</div>
+    <div v-if="errorOwner" class="error">{{ errorOwner }}</div>
   
-    <div v-if="owner">
+    <div v-if="owner" class="owner-box">
       <h3>Owner: {{ owner.owner_name }}</h3>
       <p>{{ owner.bio }}</p>
     </div>
-  </div>  
+  </div>
+  </div>
 </body>
 </html>
